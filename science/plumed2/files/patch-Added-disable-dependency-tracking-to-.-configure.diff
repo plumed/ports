@@ -1,0 +1,182 @@
+From 3832faf27e593f189bea56d4496d2e63c89f2ebd Mon Sep 17 00:00:00 2001
+From: Giovanni Bussi <giovanni.bussi@gmail.com>
+Date: Mon, 13 Jun 2016 12:14:33 +0200
+Subject: [PATCH] Added --disable-dependency-tracking to ./configure
+
+---
+ Makefile.conf.in          |  1 +
+ configure                 | 34 ++++++++++++++++++++++++++++++++++
+ configure.ac              | 11 +++++++++++
+ src/maketools/make.module |  2 ++
+ src/maketools/make.rules  |  8 ++++++--
+ 5 files changed, 54 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile.conf.in b/Makefile.conf.in
+index b525a10..9059e0c 100644
+--- a/Makefile.conf.in
++++ b/Makefile.conf.in
+@@ -13,6 +13,7 @@ SOEXT=@SOEXT@
+ LD=@LD@
+ LDSO=@LDSO@
+ GCCDEP=@CXX@
++disable_dependency_tracking=@disable_dependency_tracking@
+ prefix=@prefix@
+ program_name=@program_name@
+ program_transform_name=@program_transform_name@
+diff --git a/configure b/configure
+index 2f31e90..2a8bb8a 100755
+--- a/configure
++++ b/configure
+@@ -625,6 +625,7 @@ program_name
+ LD_RO
+ program_can_run_mpi
+ program_can_run
++disable_dependency_tracking
+ xxd
+ make_pdfdoc
+ dot
+@@ -700,6 +701,7 @@ enable_basic_warnings
+ enable_fussy
+ enable_debug_glibcxx
+ enable_shared
++enable_dependency_tracking
+ enable_cxx_exceptions
+ enable_ld_r
+ enable_mpi
+@@ -1360,6 +1362,8 @@ Optional Features:
+   --enable-fussy          enable fussy warnings, default: no
+   --enable-debug-glibcxx  enable enable boundary check, default: no
+   --enable-shared         enable shared libs, default: yes
++  --enable-dependency-tracking
++                          enable dependency tracking, default: yes
+   --enable-cxx-exceptions enable c++ exceptions, default: no
+   --enable-ld-r           enable group object files, default: yes
+   --enable-mpi            enable search for mpi, default: yes
+@@ -2524,6 +2528,24 @@ fi
+ 
+ 
+ 
++dependency_tracking=
++# Check whether --enable-dependency-tracking was given.
++if test "${enable_dependency_tracking+set}" = set; then :
++  enableval=$enable_dependency_tracking; case "${enableval}" in
++             (yes) dependency_tracking=true ;;
++             (no)  dependency_tracking=false ;;
++             (*)   as_fn_error $? "wrong argument to --enable-dependency-tracking" "$LINENO" 5 ;;
++  esac
++else
++  case "yes" in
++             (yes) dependency_tracking=true ;;
++             (no)  dependency_tracking=false ;;
++  esac
++
++fi
++
++
++
+ cxx_exceptions=
+ # Check whether --enable-cxx-exceptions was given.
+ if test "${enable_cxx_exceptions+set}" = set; then :
+@@ -6744,6 +6766,18 @@ then
+ fi
+ 
+ 
++if test "$dependency_tracking" = true
++then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: dependency tracking enabled" >&5
++$as_echo "$as_me: dependency tracking enabled" >&6;}
++  disable_dependency_tracking=no
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: dependency tracking disabled" >&5
++$as_echo "$as_me: dependency tracking disabled" >&6;}
++  disable_dependency_tracking=yes
++fi
++
++
+ program_can_run=""
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether a program can be run on this machine" >&5
+ $as_echo_n "checking whether a program can be run on this machine... " >&6; }
+diff --git a/configure.ac b/configure.ac
+index aca57d1..1657d8a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -163,6 +163,7 @@ PLUMED_CONFIG_ENABLE([basic_warnings],[basic-warnings],[basic warnings],[yes])
+ PLUMED_CONFIG_ENABLE([fussy],[fussy],[fussy warnings],[no])
+ PLUMED_CONFIG_ENABLE([debug_glibcxx],[debug-glibcxx],[enable boundary check],[no])
+ PLUMED_CONFIG_ENABLE([shared],[shared],[shared libs],[yes])
++PLUMED_CONFIG_ENABLE([dependency_tracking],[dependency-tracking],[dependency tracking],[yes])
+ PLUMED_CONFIG_ENABLE([cxx_exceptions],[cxx-exceptions],[c++ exceptions],[no])
+ PLUMED_CONFIG_ENABLE([ld_r],[ld-r],[group object files],[yes])
+ PLUMED_CONFIG_ENABLE([mpi],[mpi],[search for mpi],[yes])
+@@ -590,6 +591,16 @@ then
+   AC_MSG_ERROR([xxd should be installed for PLUMED to compile properly])
+ fi
+ 
++AC_SUBST(disable_dependency_tracking)
++if test "$dependency_tracking" = true
++then
++  AC_MSG_NOTICE([dependency tracking enabled])
++  disable_dependency_tracking=no
++else
++  AC_MSG_NOTICE([dependency tracking disabled])
++  disable_dependency_tracking=yes
++fi
++
+ AC_SUBST(program_can_run)
+ program_can_run=""
+ AC_MSG_CHECKING([whether a program can be run on this machine])
+diff --git a/src/maketools/make.module b/src/maketools/make.module
+index 31771e4..e92fda7 100644
+--- a/src/maketools/make.module
++++ b/src/maketools/make.module
+@@ -47,7 +47,9 @@ lib:
+ install:
+ 	cd ../lib ; make install
+ 
++ifneq ($(disable_dependency_tracking),yes)
+ -include $(DEP)
++endif
+ 
+ # if machine dependent configuration has not been found:
+ else
+diff --git a/src/maketools/make.rules b/src/maketools/make.rules
+index cea71aa..2d3155e 100644
+--- a/src/maketools/make.rules
++++ b/src/maketools/make.rules
+@@ -12,13 +12,15 @@ endif
+ # rule for c++
+ %.o: %.cpp
+ 	@echo "compiling " $*.cpp
++	@-test -d deps || mkdir deps
++ifneq ($(disable_dependency_tracking),yes)
+ 	$(AT)$(CXXDEP) -c -MM -MF$*.d $(CPPFLAGS) $(ADDCPPFLAGS) $(CXXFLAGS) $*.cpp
+ 	@cp -f $*.d $*.d.tmp
+-	@-test -d deps || mkdir deps
+ 	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | \
+ 	 sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
+ 	@mv $*.d deps/$*.d
+ 	@rm -f $*.d.tmp
++endif
+ ifndef XLF
+ 	$(AT)$(CXX) -c $(CPPFLAGS) $(ADDCPPFLAGS) $(CXXFLAGS) $*.cpp -o $*.o
+ endif
+@@ -26,13 +28,15 @@ endif
+ # rule for c
+ %.o: %.c
+ 	@echo "compiling " $*.c
++	@-test -d deps || mkdir deps
++ifneq ($(disable_dependency_tracking),yes)
+ 	$(AT)$(CXXDEP) -c -MM -MF$*.d $(CPPFLAGS) $(ADDCPPFLAGS) $(CFLAGS) $*.c -o $*.o
+ 	@cp -f $*.d $*.d.tmp
+-	@-test -d deps || mkdir deps
+ 	@sed -e 's/.*://' -e 's/\\$$//' < $*.d.tmp | fmt -1 | \
+ 	 sed -e 's/^ *//' -e 's/$$/:/' >> $*.d
+ 	@mv $*.d deps/$*.d
+ 	@rm -f $*.d.tmp
++endif
+ ifndef XLF
+ 	$(AT)$(CC) -c $(CPPFLAGS) $(ADDCPPFLAGS) $(CFLAGS) $*.c -o $*.o
+ endif
+-- 
+2.8.3
+

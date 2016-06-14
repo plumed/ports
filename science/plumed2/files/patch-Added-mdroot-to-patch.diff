@@ -1,0 +1,51 @@
+From 2f6409101119747ddbb9d885a347f8c616437d6f Mon Sep 17 00:00:00 2001
+From: Giovanni Bussi <giovanni.bussi@gmail.com>
+Date: Tue, 14 Jun 2016 11:56:33 +0200
+Subject: [PATCH] Added --mdroot to patch
+
+Useful while patching in macports
+---
+ patches/patch.sh | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/patches/patch.sh b/patches/patch.sh
+index bb8d6d0..ef96768 100755
+--- a/patches/patch.sh
++++ b/patches/patch.sh
+@@ -55,6 +55,7 @@ multiple_actions=
+ otherfiles=
+ save_originals=
+ quiet=
++mdroot=
+ 
+ for option
+ do
+@@ -73,9 +74,11 @@ do
+     (--new=*)           test -n "$action" && multiple_actions=yes ; action=new ; newpatch="${prefix_option#--new=}" ;;
+     (--description)     echo "patch an MD engine" ; exit ;;
+     (--engine=*) engine="${prefix_option#--engine=}" ;;
++    (--mdroot=*) mdroot="${prefix_option#--mdroot=}" ;;
+     (--mode=*) mode="${prefix_option#--mode=}" ;;
+     (--diff=*) diff="${prefix_option#--diff=}" ;;
+     (--engine|-e) prefix="--engine=" ;;
++    (--mdroot) prefix="--mdroot" ;;
+     (--root=*) prefix="--root="; PLUMED_ROOT="${prefix_option#--root=}" ;;
+     (--diff|-d) prefix="--diff=" ;;
+     (--mode|-m) prefix="--mode=" ;;
+@@ -91,6 +94,13 @@ do
+   esac
+ done
+ 
++if [ -n "$mdroot" ] ; then
++  if ! cd "$mdroot" ; then
++    echo "Directory $mdroot does not exist"
++    exit
++  fi
++fi
++
+ if [ -n "$multiple_actions" ] ; then
+   echo "Too many actions. -h for help"
+   exit
+-- 
+2.8.3
+
