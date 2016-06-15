@@ -34,26 +34,45 @@ Have a look at the different available variants using
 
     > sudo port info plumed
 
+Variants are used to switch on or off some features.
+For instance, `matheval` variant is on by default (implying
+that `libmatheval` will be installed by macports) and
+can be switched off with `sudo port install plumed -matheval`.
+Similarly, other variants can be switch on using `+variant`.
+
+Plumed also uses variants to support different compilers.
 For instance, you can install plumed with openmpi using
 
     > sudo port install plumed +openmpi
+
+Using gcc instead of native compilers is recommended so as to
+take advantage of openMP
+
+    > sudo port install plumed +openmpi +gcc6
 
 
 Installing gromacs patched with plumed
 --------------------------------------
 
-There is also a tentative replacement for the gromacs port, which
-includes a plumed variant.
+There is also a tentative replacement for the gromacs port.
+The only difference between this port and the one provided by macports
+is that this one also implements a plumed variant.
+For instance, you can use the following command to install
+gromacs patched with plumed with gcc compiler and openmpi:
 
-    > sudo port install gromacs +openmpi +plumed
+    > sudo port install gromacs +openmpi +gcc6 +plumed
 
 Notice that gromacs is patched with plumed in runtime mode
 but that the path of libplumedKernel.dylib in the macports tree
 is hardcoded. As a consequence:
 
 - If gromacs is run with `PLUMED_KERNEL` unset (or set to empty),
-  then the macports plumed is used
+  then the macports plumed is used.
 
 - If gromacs is run with `PLUMED_KERNEL` pointing to another instance
   of the plumed library, the other instance is used.
+
+Also notice that gromacs should be compiled using the same compiler
+variant as plumed (in this example `+openmpi +gcc6`). In case this is not
+true, compilation will fail.
 
