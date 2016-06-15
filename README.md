@@ -47,12 +47,13 @@ includes a plumed variant.
 
     > sudo port install gromacs +openmpi +plumed
 
-Notice that for technical reasons gromacs is patched with plumed
-in runtime mode. Thus, before running gromacs you should set
-explicitly
+Notice that gromacs is patched with plumed in runtime mode
+but that the path of libplumedKernel.dylib in the macports tree
+is hardcoded. As a consequence:
 
-    > export PLUMED_KERNEL=/opt/local/lib/libplumed.dylib
+- If gromacs is run with `PLUMED_KERNEL` unset (or set to empty),
+  then the macports plumed is used
 
-This should be fixed (TODO).
-
+- If gromacs is run with `PLUMED_KERNEL` pointing to another instance
+  of the plumed library, the other instance is used.
 
