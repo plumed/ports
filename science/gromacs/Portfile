@@ -70,9 +70,9 @@ test.env-append DYLD_LIBRARY_PATH=${worksrcpath}/lib
 
 ## ADDITION FOR PLUMED VARIANT ONLY
 variant plumed description "Patched with plumed" {
-    depends_build-append   port:plumed2
-    depends_lib-append     port:plumed2
-    mpi.enforce_variant plumed2
+    depends_build-append   port:plumed
+    depends_lib-append     port:plumed
+    mpi.enforce_variant plumed
     pre-configure {
 # I need to execute with full path since PATH variable is not properly set here
 # Also notice that I am patching with runtime. This is required since for

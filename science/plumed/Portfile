@@ -3,20 +3,21 @@
 
 PortSystem          1.0
 
-name                plumed2
+name                plumed
 PortGroup           mpi 1.0
 
 version             2.2.2
 categories          science
 license             gpl
 maintainers         gmail.com:giovanni.bussi
-description         plumed2
-long_description    plumed2
+description         plumed
+long_description    plumed
 platforms           darwin
 
 homepage            http://www.plumed.org/
 master_sites        http://github.com/plumed/plumed2/archive/
 distfiles           v${version}.tar.gz
+distname            plumed2-${version}
 
 checksums           rmd160  a817137c5fe5c24433b7bf0cbe8b3fcdc3b2cd03 \
                     sha256  c64745c28dd033a44278579cfbc67d042d777de503b259ca0d9ea1bfa30945b2

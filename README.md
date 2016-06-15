@@ -28,15 +28,15 @@ Using plumed with macports
 
 Now you will be able to install plumed with ports, e.g. using
 
-    > sudo port install plumed2
+    > sudo port install plumed
 
 Have a look at the different available variants using
 
-    > sudo port info plumed2
+    > sudo port info plumed
 
 For instance, you can install plumed with openmpi using
 
-    > sudo port install plumed2 +openmpi
+    > sudo port install plumed +openmpi
 
 
 Installing gromacs patched with plumed
