@@ -27,14 +27,18 @@ patch.pre_args -p1
 # next plumed release (2.2.3)
 patchfiles patch-Added-disable-dependency-tracking-to-.-configure.diff \
            patch-Added-all_plus_docs-target.diff \
-           patch-Added-mdroot-to-patch.diff
+           patch-Added-mdroot-to-patch.diff \
+           patch-Added-__PLUMED_DEFAULT_KERNEL.diff
 
 # Disable additional features.
 # they are then re-enabled when selecting proper variants
 # this is important for features that require an additional package to be
 # sure that even if the user has that package already installed plumed is
 # not going to use it.
-configure.args --disable-matheval --disable-xdrfile --disable-molfile-plugins --disable-zlib --disable-mpi
+configure.args --disable-matheval --disable-xdrfile --disable-molfile-plugins \
+               --disable-zlib --disable-mpi \
+               CPPFLAGS="-D__PLUMED_DEFAULT_KERNEL=\\\\\\\"${prefix}/lib/libplumedKernel.dylib\\\\\\\""
+# The number of backslashes here is to make sure that the find flag is -D__PLUMED_DEFAULT_KERNEL=\"/path\"
 
 compilers.choose    cc cxx
 mpi.setup
