@@ -75,9 +75,10 @@ variant plumed description "Patched with plumed" {
     mpi.enforce_variant plumed
     pre-configure {
 # I need to execute with full path since PATH variable is not properly set here
-# Also notice that I am patching with runtime. This is required since for
-# some reason "--shared" does not work (they final executable does not find the plumed library).
-# In principle it might be better to patch with "--shared"
+# Also notice that I am patching with runtime. Notice that 
+# plumed compiled for MacPorts have the hardcoded path also in the runtime patch.
+# This allows the user to work with MacPorts plumed and possibly
+# override the choice setting the PLUMED_KERNEL environment variable.
 # Also notice that gromacs version is hardcoded here. Plumed patch is not always
 # updated when gromacs is.
       exec ${prefix}/bin/plumed patch --mdroot=${worksrcpath} -e gromacs-5.1.2 --runtime -p
