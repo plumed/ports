@@ -7,6 +7,7 @@ name                plumed
 PortGroup           mpi 1.0
 
 version             2.2.2
+revision            1
 categories          science
 license             gpl
 maintainers         gmail.com:giovanni.bussi
@@ -82,4 +83,9 @@ variant doc description {Also compile documentation} {
 }
 
 default_variants +matheval +xdrfile +zlib
+
+post-destroot {
+    system "install_name_tool -id ${prefix}/lib/libplumed.dylib ${destroot}${prefix}/lib/libplumed.dylib"
+    system "install_name_tool -id ${prefix}/lib/libplumedKernel.dylib ${destroot}${prefix}/lib/libplumedKernel.dylib"
+}
 
