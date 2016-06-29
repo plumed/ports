@@ -9,10 +9,13 @@ PortGroup           mpi 1.0
 version             2.2.2
 revision            1
 categories          science
-license             gpl
+license             GPL
 maintainers         gmail.com:giovanni.bussi
-description         plumed
-long_description    plumed
+description         PLUMED is a plugin for molecular dynamics
+long_description    PLUMED is a plugin for molecular dynamics that can be used \
+                    in combination with popular molecular dynamics codes to perform biased simulations. \
+                    Additionally, it can be used as a standalone tool to analyze trajectories. 
+
 platforms           darwin
 
 homepage            http://www.plumed.org/
