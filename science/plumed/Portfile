@@ -21,6 +21,7 @@ homepage            http://www.plumed.org/
 checksums           rmd160  179832bc8a65a8eac0a7a21bdbc651dc95852d56 \
                     sha256  a5edf90c39ee99023ce323121d7c9824bc6796f9fdff2f25ef0b2ca0cc9220fe
 
+# This is required so that patch made with "git format-patch" work correctly
 patch.pre_args -p1
 # These patches are required to incorporate the features needed for macports
 # to work. They have been included upstream, so will not be necessary with
@@ -36,8 +37,17 @@ patchfiles patch-Added-disable-dependency-tracking-to-.-configure.diff \
 # this is important for features that require an additional package to be
 # sure that even if the user has that package already installed plumed is
 # not going to use it.
-configure.args --disable-matheval --disable-xdrfile --disable-molfile-plugins \
-               --disable-zlib --disable-mpi
+configure.args --disable-matheval \
+               --disable-xdrfile \
+               --disable-molfile-plugins \
+               --disable-zlib \
+               --disable-mpi
+
+# Hardcode path for libplumedKernel.dylib.
+# This allows to patch MD codes using the --runtime option but using as
+# default kernel the installed one. In this way, MacPorts users
+# can just use patched MD codes with the installed plumed or replace it
+# by setting PLUMED_KERNEL at runtime
 configure.cppflags-append "-D__PLUMED_DEFAULT_KERNEL=${prefix}/lib/libplumedKernel.dylib"
 
 compilers.choose    cc cxx
@@ -82,6 +92,8 @@ variant doc description {Also compile documentation} {
 
 default_variants +matheval +xdrfile +zlib
 
+# This is required since PLUMED installation does not do it explicitly.
+# It might be removed when this will be incorporated upstream
 post-destroot {
     system "install_name_tool -id ${prefix}/lib/libplumed.dylib ${destroot}${prefix}/lib/libplumed.dylib"
     system "install_name_tool -id ${prefix}/lib/libplumedKernel.dylib ${destroot}${prefix}/lib/libplumedKernel.dylib"
