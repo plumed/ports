@@ -2,12 +2,11 @@
 # $Id: Portfile 123374 2014-08-08 21:53:07Z mojca@macports.org $
 
 PortSystem          1.0
-PortGroup           github 1.0
 
-github.setup        plumed plumed2 2.2.2 v
 name                plumed
 PortGroup           mpi 1.0
 
+version             2.2.2
 revision            1
 categories          science
 license             gpl
@@ -17,9 +16,12 @@ long_description    plumed
 platforms           darwin
 
 homepage            http://www.plumed.org/
+master_sites        http://github.com/plumed/plumed2/archive/
+distfiles           v${version}.tar.gz
+distname            plumed2-${version}
 
-checksums           rmd160  179832bc8a65a8eac0a7a21bdbc651dc95852d56 \
-                    sha256  a5edf90c39ee99023ce323121d7c9824bc6796f9fdff2f25ef0b2ca0cc9220fe
+checksums           rmd160  a817137c5fe5c24433b7bf0cbe8b3fcdc3b2cd03 \
+                    sha256  c64745c28dd033a44278579cfbc67d042d777de503b259ca0d9ea1bfa30945b2
 
 # This is required so that patch made with "git format-patch" work correctly
 patch.pre_args -p1
