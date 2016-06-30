@@ -6,15 +6,15 @@ PortSystem          1.0
 name                plumed
 PortGroup           mpi 1.0
 
-version             2.2.2
-revision            1
+version             2.2.3
+revision            0
 categories          science
 license             GPL
 maintainers         gmail.com:giovanni.bussi
 description         PLUMED is a plugin for molecular dynamics
 long_description    PLUMED is a plugin for molecular dynamics that can be used \
                     in combination with popular molecular dynamics codes to perform biased simulations. \
-                    Additionally, it can be used as a standalone tool to analyze trajectories. 
+                    Additionally, it can be used as a standalone tool to analyze trajectories.
 
 platforms           darwin
 
@@ -23,19 +23,19 @@ master_sites        http://github.com/plumed/plumed2/archive/
 distfiles           v${version}.tar.gz
 distname            plumed2-${version}
 
-checksums           rmd160  a817137c5fe5c24433b7bf0cbe8b3fcdc3b2cd03 \
-                    sha256  c64745c28dd033a44278579cfbc67d042d777de503b259ca0d9ea1bfa30945b2
+# Checksums can be obtained with
+# wget http://github.com/plumed/plumed2/archive/${version}.tar.gz
+# openssl dgst -rmd160 v${version}.tar.gz
+# openssl dgst -sha256 v${version}.tar.gz
+checksums           rmd160  f8602f14e48207b934e6d456c91cb8d296c9f599 \
+                    sha256  2db19c5f6a2918833941d0bf47b5431d0865529d786df797ccc966d763ed7b0c
 
 # This is required so that patch made with "git format-patch" work correctly
-patch.pre_args -p1
-# These patches are required to incorporate the features needed for macports
-# to work. They have been included upstream, so will not be necessary with
-# next plumed release (2.2.3)
-patchfiles patch-Added-disable-dependency-tracking-to-.-configure.diff \
-           patch-Added-all_plus_docs-target.diff \
-           patch-Added-mdroot-to-patch.diff \
-           patch-Added-__PLUMED_DEFAULT_KERNEL.diff \
-           patch-Fix-in-__PLUMED_DEFAULT_KERNEL.diff
+### patch.pre_args -p1
+# In case patches from github should be included to fix behavior on macports one should
+# - put patch files (as obtained with git format-patch) in files/ directory
+# - list their name here:
+### patchfiles name-of-patch-file.diff
 
 # Disable additional features.
 # they are then re-enabled when selecting proper variants
@@ -82,7 +82,7 @@ variant molfile description {Enable molfile} {
 }
 
 variant extra_modules description {Enable extra modules} {
-  configure.args-append --enable-modules=crystallization:manyrestraints
+  configure.args-append --enable-modules=crystallization:manyrestraints:adjmat
 }
  
 variant debug description {Enable debug flags} {
