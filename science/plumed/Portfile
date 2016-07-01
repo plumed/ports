@@ -42,7 +42,8 @@ checksums           rmd160  f8602f14e48207b934e6d456c91cb8d296c9f599 \
 # this is important for features that require an additional package to be
 # sure that even if the user has that package already installed plumed is
 # not going to use it.
-configure.args --disable-matheval \
+configure.args-append \
+               --disable-matheval \
                --disable-xdrfile \
                --disable-molfile-plugins \
                --disable-zlib \
@@ -75,6 +76,11 @@ variant xdrfile description {Enable xdrfile} {
 variant zlib description {Enable zlib} {
   configure.args-delete --disable-zlib
   depends_lib-append port:zlib
+}
+
+variant gsl description {Enable gsl} {
+  configure.args-append --enable-gsl
+  depends_lib-append port:gsl
 }
 
 variant molfile description {Enable molfile} {
