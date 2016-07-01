@@ -82,7 +82,7 @@ variant molfile description {Enable molfile} {
 }
 
 variant extra_modules description {Enable extra modules} {
-  configure.args-append --enable-modules=crystallization:manyrestraints:adjmat
+  configure.args-append --enable-modules=crystallization:manyrestraints
 }
  
 variant debug description {Enable debug flags} {
