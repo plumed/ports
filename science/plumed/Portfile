@@ -8,7 +8,7 @@ PortGroup           mpi 1.0
 PortGroup           linear_algebra 1.0
 
 version             2.2.3
-revision            1
+revision            2
 categories          science
 # notice: variant +molfile includes code with UIUC license (https://en.wikipedia.org/wiki/University_of_Illinois/NCSA_Open_Source_License)
 license             GPL
@@ -33,11 +33,12 @@ checksums           rmd160  f8602f14e48207b934e6d456c91cb8d296c9f599 \
                     sha256  2db19c5f6a2918833941d0bf47b5431d0865529d786df797ccc966d763ed7b0c
 
 # This is required so that patch made with "git format-patch" work correctly
-### patch.pre_args -p1
+patch.pre_args -p1
 # In case patches from github should be included to fix behavior on macports one should
 # - put patch files (as obtained with git format-patch) in files/ directory
 # - list their name here:
-### patchfiles name-of-patch-file.diff
+# this patch have been already incorporated upstream in 2.3.x
+patchfiles patch-Fixed-autoconf-for-gsl.diff
 
 # Disable additional features.
 # they are then re-enabled when selecting proper variants

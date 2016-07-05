@@ -1,0 +1,207 @@
+From db2f229bd1e1228467dfad02ea7b56ac2d69dbb6 Mon Sep 17 00:00:00 2001
+From: Giovanni Bussi <giovanni.bussi@gmail.com>
+Date: Mon, 4 Jul 2016 08:12:23 +0200
+Subject: [PATCH] Fixed autoconf for gsl
+
+I made it consistent with other libraries.
+
+Now, plumed looks first for the required functions and, if not
+found, adds a standard -l flag. This allows as in the other cases
+to override the paths using the LIBS variable.
+
+As a side effect, it might be that -lgslcblas does not get linked.
+This could happen if linked blas already define a cblas interface
+(as far as I know, this happens with mac for me and not with linux).
+---
+ configure    | 103 +++++++++++++++++++++++++++++++++++++++++++++++++++--------
+ configure.ac |  22 ++++++++++---
+ 2 files changed, 107 insertions(+), 18 deletions(-)
+
+diff --git a/configure b/configure
+index 78e5493..cd96b86 100755
+--- a/configure
++++ b/configure
+@@ -6401,52 +6401,127 @@ fi
+     as_fn_error $? "--enable-almost: cannot find almost" "$LINENO" 5
+   fi
+ fi
++
++save_LIBS="$LIBS"
++
+ if test $gsl == true ; then
+   found=ko
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lgsl" >&5
+-$as_echo_n "checking for main in -lgsl... " >&6; }
+-if ${ac_cv_lib_gsl_main+:} false; then :
++  ac_fn_cxx_check_func "$LINENO" "cblas_dgemv" "ac_cv_func_cblas_dgemv"
++if test "x$ac_cv_func_cblas_dgemv" = xyes; then :
++  found=ok
++else
++
++  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cblas_dgemv in -lgslcblas" >&5
++$as_echo_n "checking for cblas_dgemv in -lgslcblas... " >&6; }
++if ${ac_cv_lib_gslcblas_cblas_dgemv+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lgsl -lgslcblas $LIBS"
++LIBS="-lgslcblas  $LIBS"
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+-
++/* Override any GCC internal prototype to avoid an error.
++   Use char because int might match the return type of a GCC
++   builtin and then its argument prototype would still apply.  */
++#ifdef __cplusplus
++extern "C"
++#endif
++char cblas_dgemv ();
+ int
+ main ()
+ {
+-return main ();
++return cblas_dgemv ();
+   ;
+   return 0;
+ }
+ _ACEOF
+ if ac_fn_cxx_try_link "$LINENO"; then :
+-  ac_cv_lib_gsl_main=yes
++  ac_cv_lib_gslcblas_cblas_dgemv=yes
+ else
+-  ac_cv_lib_gsl_main=no
++  ac_cv_lib_gslcblas_cblas_dgemv=no
+ fi
+ rm -f core conftest.err conftest.$ac_objext \
+     conftest$ac_exeext conftest.$ac_ext
+ LIBS=$ac_check_lib_save_LIBS
+ fi
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_gsl_main" >&5
+-$as_echo "$ac_cv_lib_gsl_main" >&6; }
+-if test "x$ac_cv_lib_gsl_main" = xyes; then :
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_gslcblas_cblas_dgemv" >&5
++$as_echo "$ac_cv_lib_gslcblas_cblas_dgemv" >&6; }
++if test "x$ac_cv_lib_gslcblas_cblas_dgemv" = xyes; then :
++  LIBS="-lgslcblas $LIBS" found=ok
++
++fi
++
++fi
++
++  if test $found == ok ; then
++    found=ko
++    ac_fn_cxx_check_header_mongrel "$LINENO" "gsl/gsl_vector.h" "ac_cv_header_gsl_gsl_vector_h" "$ac_includes_default"
++if test "x$ac_cv_header_gsl_gsl_vector_h" = xyes; then :
++
++      ac_fn_cxx_check_func "$LINENO" "gsl_vector_alloc" "ac_cv_func_gsl_vector_alloc"
++if test "x$ac_cv_func_gsl_vector_alloc" = xyes; then :
+   found=ok
+ else
+-  found=ko
++
++      { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gsl_vector_alloc in -lgsl" >&5
++$as_echo_n "checking for gsl_vector_alloc in -lgsl... " >&6; }
++if ${ac_cv_lib_gsl_gsl_vector_alloc+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  ac_check_lib_save_LIBS=$LIBS
++LIBS="-lgsl  $LIBS"
++cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++
++/* Override any GCC internal prototype to avoid an error.
++   Use char because int might match the return type of a GCC
++   builtin and then its argument prototype would still apply.  */
++#ifdef __cplusplus
++extern "C"
++#endif
++char gsl_vector_alloc ();
++int
++main ()
++{
++return gsl_vector_alloc ();
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_cxx_try_link "$LINENO"; then :
++  ac_cv_lib_gsl_gsl_vector_alloc=yes
++else
++  ac_cv_lib_gsl_gsl_vector_alloc=no
++fi
++rm -f core conftest.err conftest.$ac_objext \
++    conftest$ac_exeext conftest.$ac_ext
++LIBS=$ac_check_lib_save_LIBS
++fi
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_gsl_gsl_vector_alloc" >&5
++$as_echo "$ac_cv_lib_gsl_gsl_vector_alloc" >&6; }
++if test "x$ac_cv_lib_gsl_gsl_vector_alloc" = xyes; then :
++  LIBS="-lgsl $LIBS" found=ok
++
++fi
++
++fi
++
++
+ fi
+ 
++
++  fi
+   if test $found == ok ; then
+     $as_echo "#define __PLUMED_HAS_GSL 1" >>confdefs.h
+ 
+-    LIBS="-lgsl -lgslcblas $LIBS"
+   else
+-    as_fn_error $? "--enable-gsl: cannot find gsl" "$LINENO" 5
++     LIBS="$save_LIBS"
++     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: cannot enable __PLUMED_HAS_GSL" >&5
++$as_echo "$as_me: WARNING: cannot enable __PLUMED_HAS_GSL" >&2;}
+   fi
+ fi
++
+ if test $xdrfile == true ; then
+ 
+     found=ko
+diff --git a/configure.ac b/configure.ac
+index a903cf3..e258316 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -481,16 +481,30 @@ if test $almost == true ; then
+     AC_MSG_ERROR([--enable-almost: cannot find almost])
+   fi
+ fi
++
++save_LIBS="$LIBS"
++
+ if test $gsl == true ; then
+   found=ko
+-  AC_CHECK_LIB([gsl],[main],[found=ok],[found=ko],[-lgslcblas])
++  AC_CHECK_FUNC(  [cblas_dgemv], [found=ok], [
++  AC_CHECK_LIB(   [gslcblas],[cblas_dgemv], [LIBS="-lgslcblas $LIBS"] [found=ok]
++  ) ])
++  if test $found == ok ; then
++    found=ko
++    AC_CHECK_HEADER(  [gsl/gsl_vector.h], [
++      AC_CHECK_FUNC(  [gsl_vector_alloc], [found=ok], [
++      AC_CHECK_LIB(   [gsl],[gsl_vector_alloc], [LIBS="-lgsl $LIBS"] [found=ok]
++      ) ])
++    ])
++  fi
+   if test $found == ok ; then
+     AC_DEFINE([__PLUMED_HAS_GSL])
+-    LIBS="-lgsl -lgslcblas $LIBS"
+-  else 
+-    AC_MSG_ERROR([--enable-gsl: cannot find gsl])
++  else
++     LIBS="$save_LIBS"
++     AC_MSG_WARN([cannot enable __PLUMED_HAS_GSL])
+   fi
+ fi
++
+ if test $xdrfile == true ; then
+   PLUMED_CHECK_PACKAGE([xdrfile/xdrfile_xtc.h],[write_xtc],[__PLUMED_HAS_XDRFILE],[xdrfile])
+ fi
+-- 
+2.9.0
+
