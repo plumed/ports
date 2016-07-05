@@ -9,6 +9,7 @@ PortGroup           mpi 1.0
 version             2.2.3
 revision            0
 categories          science
+# notice: variant +molfile includes code with UIUC license (https://en.wikipedia.org/wiki/University_of_Illinois/NCSA_Open_Source_License)
 license             GPL
 maintainers         gmail.com:giovanni.bussi
 description         PLUMED is a plugin for molecular dynamics
@@ -47,7 +48,8 @@ configure.args-append \
                --disable-xdrfile \
                --disable-molfile-plugins \
                --disable-zlib \
-               --disable-mpi
+               --disable-mpi \
+               --disable-gsl
 
 # Hardcode path for libplumedKernel.dylib.
 # This allows to patch MD codes using the --runtime option but using as
@@ -60,31 +62,31 @@ compilers.choose    cc cxx
 mpi.setup
 
 if {[mpi_variant_isset]} {
-  configure.args-delete --disable-mpi
+  configure.args-replace --disable-mpi --enable-mpi
 }
 
 variant matheval description {Enable libmatheval} {
-  configure.args-delete --disable-matheval
+  configure.args-replace --disable-matheval --enable-matheval
   depends_lib-append port:libmatheval
 }
 
 variant xdrfile description {Enable xdrfile} {
-  configure.args-delete --disable-xdrfile
+  configure.args-replace --disable-xdrfile --enable-xdrfile
   depends_lib-append port:xdrfile
 }
 
 variant zlib description {Enable zlib} {
-  configure.args-delete --disable-zlib
+  configure.args-replace --disable-zlib --enable-zlib
   depends_lib-append port:zlib
 }
 
 variant gsl description {Enable gsl} {
-  configure.args-append --enable-gsl
+  configure.args-replace --disable-gsl --enable-gsl
   depends_lib-append port:gsl
 }
 
 variant molfile description {Enable molfile} {
-  configure.args-delete --disable-molfile-plugins
+  configure.args-replace --disable-molfile-plugins --enable-molfile-plugins
 }
 
 variant extra_modules description {Enable extra modules} {
