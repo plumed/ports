@@ -9,7 +9,7 @@ PortGroup           linear_algebra 1.0
 PortGroup           debug 1.0
 
 version             2.2.3
-revision            2
+revision            4
 categories          science
 # notice: variant +molfile includes code with UIUC license (https://en.wikipedia.org/wiki/University_of_Illinois/NCSA_Open_Source_License)
 license             GPL
@@ -22,16 +22,10 @@ long_description    PLUMED is a plugin for molecular dynamics that can be used \
 platforms           darwin
 
 homepage            http://www.plumed.org/
-master_sites        http://github.com/plumed/plumed2/archive/
-distfiles           v${version}.tar.gz
-distname            plumed2-${version}
 
-# Checksums can be obtained with
-# wget http://github.com/plumed/plumed2/archive/${version}.tar.gz
-# openssl dgst -rmd160 v${version}.tar.gz
-# openssl dgst -sha256 v${version}.tar.gz
-checksums           rmd160  f8602f14e48207b934e6d456c91cb8d296c9f599 \
-                    sha256  2db19c5f6a2918833941d0bf47b5431d0865529d786df797ccc966d763ed7b0c
+fetch.type          git
+git.url             https://github.com/plumed/plumed2.git
+git.branch          v${version}
 
 # This is required so that patch made with "git format-patch" work correctly
 patch.pre_args -p1
