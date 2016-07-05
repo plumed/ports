@@ -5,9 +5,10 @@ PortSystem          1.0
 
 name                plumed
 PortGroup           mpi 1.0
+PortGroup           linear_algebra 1.0
 
 version             2.2.3
-revision            0
+revision            1
 categories          science
 # notice: variant +molfile includes code with UIUC license (https://en.wikipedia.org/wiki/University_of_Illinois/NCSA_Open_Source_License)
 license             GPL
@@ -60,6 +61,12 @@ configure.cppflags-append "-D__PLUMED_DEFAULT_KERNEL=${prefix}/lib/libplumedKern
 
 compilers.choose    cc cxx
 mpi.setup
+
+pre-configure {
+  # Include linear algebra libraries
+  # For some reason, this should go in a pre-configure block
+  configure.ldflags-append ${linalglib}
+}
 
 if {[mpi_variant_isset]} {
   configure.args-replace --disable-mpi --enable-mpi
