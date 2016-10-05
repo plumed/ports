@@ -27,6 +27,9 @@ install:
  - ./.travis/config.sh
 
 script:
+# this is to fix a problem with libmatheval on macports
+# (requires flex but does not specify it as a dependence)
+ - sudo port install flex
 # travis wait is needed since building mpi could require time
  - travis_wait sudo port install plumed $PLUMED_VAR
  - travis_wait sudo port install gromacs +plumed $GROMACS_VAR
