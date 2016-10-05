@@ -34,6 +34,18 @@ Have a look at the different available variants using
 
     > sudo port info plumed
 
+Notice that there is currently a bug in `libmatheval` (version 1.1.11_1)
+on MacPorts. Namely, the library depends on `flex` but does not declare it properly.
+In case you get the following error while building plumed:
+
+    Error: org.macports.build for port plumed returned: command execution failed
+    Error: Failed to install plumed
+
+you might be able to solve it by installing `flex` before plumed
+
+    > sudo port install flex
+    > sudo port install plumed
+
 Variants are used to switch on or off some features.
 For instance, `matheval` variant is on by default (implying
 that `libmatheval` will be installed by macports) and
