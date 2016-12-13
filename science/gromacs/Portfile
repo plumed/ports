@@ -8,7 +8,7 @@ PortGroup           mpi 1.0
 PortGroup           linear_algebra 1.0
 
 name                gromacs
-revision            1
+revision            2
 version             5.1.4
 categories          science math
 license             GPL-2
@@ -95,7 +95,7 @@ variant plumed description "Patched with plumed" {
 # override the choice setting the PLUMED_KERNEL environment variable.
 # Also notice that gromacs version is hardcoded here. Plumed patch is not always
 # updated when gromacs is.
-      exec ${prefix}/bin/plumed patch --mdroot=${worksrcpath} -e gromacs-5.1.2 --runtime -p
+      exec ${prefix}/bin/plumed patch --mdroot=${worksrcpath} -e gromacs-5.1.4 --runtime -p
     }
 }
 ## END ADDITION FOR PLUMED VARIANT ONLY

@@ -8,8 +8,8 @@ PortGroup           mpi 1.0
 PortGroup           linear_algebra 1.0
 PortGroup           debug 1.0
 
-version             2.2.3
-revision            5
+version             2.3.0
+revision            0
 categories          science
 license             LGPL-3
 maintainers         gmail.com:giovanni.bussi
@@ -27,12 +27,10 @@ git.url             https://github.com/plumed/plumed2.git
 git.branch          v${version}
 
 # This is required so that patch made with "git format-patch" work correctly
-patch.pre_args -p1
+# patch.pre_args -p1
 # In case patches from github should be included to fix behavior on macports one should
 # - put patch files (as obtained with git format-patch) in files/ directory
 # - list their name here:
-# this patch have been already incorporated upstream in 2.3.x
-patchfiles patch-Fixed-autoconf-for-gsl.diff
 
 # Disable additional features.
 # they are then re-enabled when selecting proper variants
@@ -103,6 +101,10 @@ variant crystallization description {Enable crystallization module} {
 
 variant manyrestraints description {Enable manyrestraints module} {
   set plumed_modules ${plumed_modules}+manyrestraints
+}
+
+variant adjmat description {Enable adjmat module} {
+  set plumed_modules ${plumed_modules}+adjmat
 }
 
 #### I leave this out momentarily since it has problems
