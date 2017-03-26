@@ -95,24 +95,26 @@ variant doc description {Also compile documentation} {
 
 set plumed_modules reset
 
-variant crystallization description {Enable crystallization module} {
+# this will automatically create variants for each optional module
+variant mod_crystallization description {Enable crystallization module} {
   set plumed_modules ${plumed_modules}+crystallization
 }
 
-variant manyrestraints description {Enable manyrestraints module} {
+variant mod_manyrestraints description {Enable manyrestraints module} {
   set plumed_modules ${plumed_modules}+manyrestraints
 }
 
-variant adjmat description {Enable adjmat module} {
+variant mod_adjmat description {Enable adjmat module} {
   set plumed_modules ${plumed_modules}+adjmat
 }
 
-#### I leave this out momentarily since it has problems
-# variant imd description {Enable imd module - includes some proprietary code} {
-#   license ${license} Restrictive
-#   set plumed_modules ${plumed_modules}+imd
-# }
- 
+variant allmodules description {Enable all optional modules} {
+  set plumed_modules ${plumed_modules}+crystallization
+  set plumed_modules ${plumed_modules}+manyrestraints
+  set plumed_modules ${plumed_modules}+adjmat
+}
+
+
 pre-configure {
   # commands should be included in a pre-configure block to access tcl variables
   configure.args-append --enable-modules=${plumed_modules}
