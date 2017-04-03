@@ -21,9 +21,16 @@ platforms           darwin
 
 homepage            http://www.plumed.org/
 
-fetch.type          git
-git.url             https://github.com/plumed/plumed2.git
-git.branch          v${version}
+master_sites        https://github.com/plumed/plumed2/releases/download/v${version}/
+distfiles           plumed-src-${version}.tgz
+
+checksums \
+   plumed-src-${version}.tgz \
+          sha256 0f0ec4998bd5fe9a897fdbecd26efb14859179bc7e9b43cb2c457c33cc64d5cf \
+          rmd160 569af66d66999a17e04c2912251a2135c7ee4f93 \
+   plumed-doc-${version}.tgz \
+          sha256 c9b0de509d5d974bad0b394bbcef7e041a6204e8d8da47d962f5b98ac7307912 \
+          rmd160 28bbe50a3a188419ce3ab1c09aff4f95bd0595c9 \
 
 # This is required so that patch made with "git format-patch" work correctly
 # patch.pre_args -p1
@@ -86,6 +93,7 @@ variant molfile description {Enable molfile - includes some BSD code} {
 }
 
 variant doc description {Also compile documentation} {
+  distfiles-append plumed-doc-${version}.tgz
   depends_build-append port:doxygen
   depends_build-append port:graphviz
   build.target all_plus_docs
