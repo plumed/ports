@@ -20,16 +20,13 @@ install:
 #  - wget https://distfiles.macports.org/MacPorts/MacPorts-2.3.4.tar.bz2 && tar xvfj MacPorts-2.3.4.tar.bz2
 #  - cd MacPorts-2.3.4 && ./configure && sudo make install && cd - && sudo rm -fr MacPorts-2.3.4
 # install macports from binary (faster):
- - wget https://distfiles.macports.org/MacPorts/MacPorts-2.3.4-10.11-ElCapitan.pkg
- - sudo installer -pkg MacPorts-2.3.4-10.11-ElCapitan.pkg -target /
+ - wget https://distfiles.macports.org/MacPorts/MacPorts-2.4.1-10.11-ElCapitan.pkg
+ - sudo installer -pkg MacPorts-2.4.1-10.11-ElCapitan.pkg -target /
  - export PATH=/opt/local/bin:$PATH
  - sudo port -v selfupdate
  - ./.travis/config.sh
 
 script:
-# this is to fix a problem with libmatheval on macports
-# (requires flex but does not specify it as a dependence)
- - sudo port install flex
 # travis wait is needed since building mpi could require time
  - travis_wait sudo port install plumed $PLUMED_VAR
  - travis_wait sudo port install gromacs +plumed $GROMACS_VAR
