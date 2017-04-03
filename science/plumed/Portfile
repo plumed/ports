@@ -33,10 +33,11 @@ checksums \
           rmd160 28bbe50a3a188419ce3ab1c09aff4f95bd0595c9 \
 
 # This is required so that patch made with "git format-patch" work correctly
-# patch.pre_args -p1
+patch.pre_args -p1
 # In case patches from github should be included to fix behavior on macports one should
 # - put patch files (as obtained with git format-patch) in files/ directory
 # - list their name here:
+patchfiles 0001-Added-enable-libsearch-to-configure.patch
 
 # Disable additional features.
 # they are then re-enabled when selecting proper variants
