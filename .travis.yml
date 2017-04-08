@@ -7,6 +7,7 @@ matrix:
 # no mpi / openmpi / mpich
 # native compilers / latest stable gcc
   - env: PLUMED_VAR=""               GROMACS_VAR=""
+  - env: PLUMED_VAR="+allmodules"    GROMACS_VAR=""
   - env: PLUMED_VAR="+gcc6"          GROMACS_VAR="+gcc6"
   - env: PLUMED_VAR="+openmpi"       GROMACS_VAR="+openmpi"
   - env: PLUMED_VAR="+gcc6 +openmpi" GROMACS_VAR="+gcc6 +openmpi"
@@ -29,4 +30,5 @@ install:
 script:
 # travis wait is needed since building mpi could require time
  - travis_wait sudo port install plumed $PLUMED_VAR
+ - plumed info --configuration
  - travis_wait sudo port install gromacs +plumed $GROMACS_VAR
