@@ -8,9 +8,12 @@ PortGroup           linear_algebra 1.0
 PortGroup           debug 1.0
 
 version             2.3.1
-revision            0
 categories          science
-license             LGPL-3
+# PLUMED is released with a LGPL-3 license.
+# However, the code base also contains molfile plugins from VMD
+# that are released with a BSD-like license
+# http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/
+license             LGPL-3 BSD
 maintainers         gmail.com:giovanni.bussi
 description         PLUMED is a plugin for molecular dynamics
 long_description    PLUMED is a plugin for molecular dynamics that can be used \
@@ -25,14 +28,10 @@ master_sites        https://github.com/plumed/plumed2/releases/download/v${versi
 distfiles           plumed-src-${version}.tgz
 
 checksums \
-   plumed-src-${version}.tgz \
           sha256 0f0ec4998bd5fe9a897fdbecd26efb14859179bc7e9b43cb2c457c33cc64d5cf \
-          rmd160 569af66d66999a17e04c2912251a2135c7ee4f93 \
-   plumed-doc-${version}.tgz \
-          sha256 c9b0de509d5d974bad0b394bbcef7e041a6204e8d8da47d962f5b98ac7307912 \
-          rmd160 28bbe50a3a188419ce3ab1c09aff4f95bd0595c9 \
+          rmd160 569af66d66999a17e04c2912251a2135c7ee4f93
 
-# This is required so that patch made with "git format-patch" work correctly
+# This is required so that patch made with "git format-patch" works correctly
 patch.pre_args -p1
 # In case patches from github should be included to fix behavior on macports one should
 # - put patch files (as obtained with git format-patch) in files/ directory
@@ -46,7 +45,6 @@ patchfiles 0001-Added-enable-libsearch-to-configure.patch
 # not going to use it.
 configure.args-append \
                --disable-libsearch \
-               --disable-molfile-plugins \
                --disable-mpi 
 
 # Hardcode path for libplumedKernel.dylib.
@@ -63,73 +61,21 @@ if {[mpi_variant_isset]} {
   configure.args-replace --disable-mpi --enable-mpi
 }
 
-variant matheval description {Enable libmatheval} {
-  configure.ldflags-append -lmatheval
-  depends_lib-append port:libmatheval
-}
+# these libraries are linked by default
+configure.ldflags-append -lmatheval -lxdrfile -lz -lgsl
+depends_lib-append port:libmatheval port:xdrfile port:zlib port:gsl
 
-variant xdrfile description {Enable xdrfile} {
-  configure.ldflags-append -lxdrfile
-  depends_lib-append port:xdrfile
-}
-
-variant zlib description {Enable zlib} {
-  configure.ldflags-append -lz
-  depends_lib-append port:zlib
-}
-
-variant gsl description {Enable gsl} {
-  configure.ldflags-append -lgsl
-  depends_lib-append port:gsl
-}
-
-variant molfile description {Enable molfile - includes some BSD code} {
-  license ${license} BSD
-  configure.args-replace --disable-molfile-plugins --enable-molfile-plugins
-}
-
-variant doc description {Also compile documentation} {
-  distfiles-append plumed-doc-${version}.tgz
-  depends_build-append port:doxygen
-  depends_build-append port:graphviz
-  build.target all_plus_docs
-}
-
-# this is a tcl variable contains a concatenated list of modules
+# this is a tcl variable that contains a concatenated list of modules
 # to be activated
 
-set plumed_modules reset
-
-# this will automatically create variants for each optional module
-variant mod_crystallization description {Enable crystallization module} {
-  set plumed_modules ${plumed_modules}+crystallization
-}
-
-variant mod_manyrestraints description {Enable manyrestraints module} {
-  set plumed_modules ${plumed_modules}+manyrestraints
-}
-
-variant mod_adjmat description {Enable adjmat module} {
-  set plumed_modules ${plumed_modules}+adjmat
-}
-
 variant allmodules description {Enable all optional modules} {
-  set plumed_modules ${plumed_modules}+crystallization
-  set plumed_modules ${plumed_modules}+manyrestraints
-  set plumed_modules ${plumed_modules}+adjmat
+  configure.args-append --enable-modules=all
 }
-
 
 pre-configure {
-  # commands should be included in a pre-configure block to access tcl variables
-  configure.args-append --enable-modules=${plumed_modules}
+  # this command should be included in a pre-configure block to access tcl variables
   configure.ldflags-append ${linalglib}
 }
-
-# Default variants include no optional modules.
-# Additionally, the link libraries that are very useful (e.g. matheval of xdrfile)
-# and quick to compile
-default_variants +matheval +xdrfile +zlib +molfile
 
 # This is required since PLUMED installation does not do it explicitly.
 # It might be removed when this will be incorporated upstream
