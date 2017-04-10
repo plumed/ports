@@ -20,9 +20,9 @@ install:
  - chmod +x install.macports
  - ./install.macports
  - export PATH=/opt/local/bin:$PATH
- - wget https://raw.githubusercontent.com/GiovanniBussi/travis-ci-macports/master/configure.macports
- - chmod +x configure.macports
- - ./configure.macports "$PWD"
+ - wget https://raw.githubusercontent.com/GiovanniBussi/travis-ci-macports/master/config.macports
+ - chmod +x config.macports
+ - ./config.macports "$PWD"
 
 script:
 # travis wait is needed since building mpi could require time
