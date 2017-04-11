@@ -14,7 +14,7 @@ categories          science
 # molfile plugins from VMD that are released with a BSD-like license
 # http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/
 license             LGPL-3 BSD
-maintainers         gmail.com:giovanni.bussi
+maintainers         gmail.com:giovanni.bussi openmaintainer
 description         PLUMED is a plugin for molecular dynamics
 long_description    PLUMED is a plugin for molecular dynamics that can be used \
                     in combination with popular molecular dynamics codes to perform biased simulations. \
@@ -40,7 +40,7 @@ patch.pre_args -p1
 patchfiles 0001-Added-enable-libsearch-to-configure.patch
 
 # Disable additional features.
-# they are then re-enabled when selecting proper variants
+# They are then re-enabled when selecting proper variants
 # this is important for features that require an additional package to be
 # sure that even if the user has that package already installed plumed is
 # not going to use it.
