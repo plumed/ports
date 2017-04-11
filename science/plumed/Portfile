@@ -10,8 +10,8 @@ PortGroup           debug 1.0
 version             2.3.1
 categories          science
 
-# BSD license has been added PLUMED contains molfile plugins from VMD
-# that are released with a BSD-like license
+# Most of the PLUMED code is L-GPL3. However, PLUMED containts
+# molfile plugins from VMD that are released with a BSD-like license
 # http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/
 license             LGPL-3 BSD
 maintainers         gmail.com:giovanni.bussi
