@@ -44,9 +44,12 @@ patchfiles 0001-Added-enable-libsearch-to-configure.patch
 # this is important for features that require an additional package to be
 # sure that even if the user has that package already installed plumed is
 # not going to use it.
+# Also avoid searching for doxygen.
 configure.args-append \
+               --disable-doc \
                --disable-libsearch \
                --disable-mpi 
+
 
 # Hardcode path for libplumedKernel.dylib.
 # This allows to patch MD codes using the --runtime option but using as
