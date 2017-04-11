@@ -62,6 +62,10 @@ if {[mpi_variant_isset]} {
   configure.args-replace --disable-mpi --enable-mpi
 }
 
+# libraries
+configure.ldflags-append -lmatheval -lxdrfile -lz -lgsl
+depends_lib-append port:libmatheval port:xdrfile port:zlib port:gsl
+
 # This variant enables optional modules in PLUMED.
 variant allmodules description {Enable all optional modules} {
   configure.args-append --enable-modules=all
