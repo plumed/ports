@@ -16,13 +16,11 @@ matrix:
 install:
 # set columns in terminal, required for curl to work correctly:
  - export COLUMNS=80
- - wget https://raw.githubusercontent.com/GiovanniBussi/travis-ci-macports/master/install.macports
- - chmod +x install.macports
- - ./install.macports
+ - wget https://raw.githubusercontent.com/GiovanniBussi/macports-ci/master/macports-ci
+ - chmod +x ./macports-ci
+ - ./macports-ci install
  - export PATH=/opt/local/bin:$PATH
- - wget https://raw.githubusercontent.com/GiovanniBussi/travis-ci-macports/master/config.macports
- - chmod +x config.macports
- - ./config.macports "$PWD"
+ - ./macports-ci localports "$PWD"
 
 script:
 # travis wait is needed since building mpi could require time
