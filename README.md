@@ -34,25 +34,7 @@ Have a look at the different available variants using
 
     > sudo port info plumed
 
-Notice that there is currently a bug in `libmatheval` (version 1.1.11_1)
-on MacPorts. Namely, the library depends on `flex` but does not declare it properly.
-In case you get the following error while building plumed:
-
-    Error: org.macports.build for port plumed returned: command execution failed
-    Error: Failed to install plumed
-
-you might be able to solve it by installing `flex` before plumed
-
-    > sudo port install flex
-    > sudo port install plumed
-
-Variants are used to switch on or off some features.
-For instance, `matheval` variant is on by default (implying
-that `libmatheval` will be installed by macports) and
-can be switched off with `sudo port install plumed -matheval`.
-Similarly, other variants can be switch on using `+variant`.
-
-Plumed also uses variants to support different compilers.
+Plumed uses variants to support different compilers.
 For instance, you can install plumed with openmpi using
 
     > sudo port install plumed +openmpi
@@ -78,10 +60,10 @@ Notice that gromacs is patched with plumed in runtime mode
 but that the path of libplumedKernel.dylib in the macports tree
 is hardcoded. As a consequence:
 
-- If gromacs is run with `PLUMED_KERNEL` unset (or set to empty),
+- If gromacs is run with `PLUMED_KERNEL` environment variable unset (or set to empty),
   then the macports plumed is used.
 
-- If gromacs is run with `PLUMED_KERNEL` pointing to another instance
+- If gromacs is run with `PLUMED_KERNEL` environment variable pointing to another instance
   of the plumed library, the other instance is used.
 
 Also notice that gromacs should be compiled using the same compiler
