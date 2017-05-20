@@ -37,7 +37,9 @@ patch.pre_args -p1
 # In case patches from github should be included to fix behavior on macports one should
 # - put patch files (as obtained with git format-patch) in files/ directory
 # - list their name here:
-patchfiles 0001-Added-enable-libsearch-to-configure.patch
+patchfiles 0001-Added-enable-libsearch-to-configure.patch \
+           0002-Added-autoconf-flag-disable-static-patch.patch \
+           0003-Added-install_name_tool-on-mac.patch
 
 # Disable additional features.
 # They are then re-enabled when selecting proper variants

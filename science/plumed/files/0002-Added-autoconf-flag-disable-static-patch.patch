@@ -1,0 +1,128 @@
+From f629e871f2ec4ed7ac31a76421eda26cd24e9249 Mon Sep 17 00:00:00 2001
+From: Giovanni Bussi <giovanni.bussi@gmail.com>
+Date: Sat, 20 May 2017 09:58:15 +0200
+Subject: [PATCH 1/4] Added autoconf flag --disable-static-patch
+
+This flag disables the autoconf tests related to static patching.
+The rationale is to be 100% sure that a wrong c++ library could not
+be accidentally linked.
+
+Notice however that this does not disable the "plumed patch --static"
+flag. I think this should be fixed for the procedure to be more robust.
+
+In the future, we could make this flag disabled by
+default (to discourage static patching). Meanwhile, this is an option.
+---
+ configure    | 31 +++++++++++++++++++++++++++++++
+ configure.ac | 11 +++++++++++
+ 2 files changed, 42 insertions(+)
+
+diff --git a/configure b/configure
+index 8a8be80d5..117ee9b09 100755
+--- a/configure
++++ b/configure
+@@ -695,6 +695,7 @@ ac_user_opts='
+ enable_option_checking
+ enable_modules
+ enable_libsearch
++enable_static_patch
+ enable_doc
+ enable_pdfdoc
+ enable_debug
+@@ -1357,6 +1358,7 @@ Optional Features:
+   --enable-modules        all/none/reset or : separated list such as
+                           +crystallization:-bias default: reset
+   --enable-libsearch      enable search for libraries, default: yes
++  --enable-static-patch   enable allow statically linking plumed, default: yes
+   --enable-doc            enable documentation, default: yes
+   --enable-pdfdoc         enable pdf version of the manual, default: no
+   --enable-debug          enable debugging, default: no
+@@ -2430,6 +2432,28 @@ fi
+ 
+ 
+ 
++# This can be disabled to avoid the extra tests for static patching.
++# In the future, when this is disabled, we could disable the "--static" flag
++# of "plumed patch"
++
++static_patch=
++# Check whether --enable-static-patch was given.
++if test "${enable_static_patch+set}" = set; then :
++  enableval=$enable_static_patch; case "${enableval}" in
++             (yes) static_patch=true ;;
++             (no)  static_patch=false ;;
++             (*)   as_fn_error $? "wrong argument to --enable-static-patch" "$LINENO" 5 ;;
++  esac
++else
++  case "yes" in
++             (yes) static_patch=true ;;
++             (no)  static_patch=false ;;
++  esac
++
++fi
++
++
++
+ 
+ doc=
+ # Check whether --enable-doc was given.
+@@ -6965,6 +6989,8 @@ $as_echo "no" >&6; }
+   fi
+ fi
+ 
++if test "${static_patch}" == true ; then
++
+ { $as_echo "$as_me:${as_lineno-$LINENO}: I will now check if C++ objects can be linked by C/Fortran compilers" >&5
+ $as_echo "$as_me: I will now check if C++ objects can be linked by C/Fortran compilers" >&6;}
+ { $as_echo "$as_me:${as_lineno-$LINENO}: This is relevant if you want to use plumed patch --static on a non-C++ code" >&5
+@@ -7040,6 +7066,11 @@ $as_echo "$as_me: $compiler compiler not configured" >&6;}
+   rm -f conftest.* conftest-main.*
+ done
+ 
++else
++{ $as_echo "$as_me:${as_lineno-$LINENO}: Static patching is disabled, thus tests required for static patching will be skipped" >&5
++$as_echo "$as_me: Static patching is disabled, thus tests required for static patching will be skipped" >&6;}
++fi
++
+ if test "$prefix" == NONE
+ then
+   prefix=/usr/local
+diff --git a/configure.ac b/configure.ac
+index 589b91749..85c556a8a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -169,6 +169,11 @@ AC_ARG_ENABLE([modules],
+ # listed in LDFLAGS are linked
+ PLUMED_CONFIG_ENABLE([libsearch],[libsearch],[search for libraries],[yes])
+ 
++# This can be disabled to avoid the extra tests for static patching.
++# In the future, when this is disabled, we could disable the "--static" flag
++# of "plumed patch"
++PLUMED_CONFIG_ENABLE([static_patch],[static-patch],[allow statically linking plumed],[yes])
++
+ PLUMED_CONFIG_ENABLE([doc],[doc],[documentation],[yes])
+ PLUMED_CONFIG_ENABLE([pdfdoc],[pdfdoc],[pdf version of the manual],[no])
+ PLUMED_CONFIG_ENABLE([debug],[debug],[debugging],[no])
+@@ -750,6 +755,8 @@ EOF
+   fi
+ fi
+ 
++if test "${static_patch}" == true ; then
++
+ AC_MSG_NOTICE([I will now check if C++ objects can be linked by C/Fortran compilers])
+ AC_MSG_NOTICE([This is relevant if you want to use plumed patch --static on a non-C++ code])
+ 
+@@ -817,6 +824,10 @@ EOF
+   rm -f conftest.* conftest-main.*
+ done
+ 
++else
++AC_MSG_NOTICE([Static patching is disabled, thus tests required for static patching will be skipped])
++fi
++
+ if test "$prefix" == NONE
+ then
+   prefix=/usr/local
+-- 
+2.13.0
+

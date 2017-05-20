@@ -1,0 +1,28 @@
+From 39d5298460e11f07aafa3f58370cc1ce4d5b662e Mon Sep 17 00:00:00 2001
+From: Giovanni Bussi <giovanni.bussi@gmail.com>
+Date: Sat, 20 May 2017 09:58:15 +0200
+Subject: [PATCH 3/4] Added install_name_tool on mac
+
+This fixes the hardcoded path on dylibs
+---
+ src/lib/Makefile | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/lib/Makefile b/src/lib/Makefile
+index 3b3cf1904..a86e5ecde 100644
+--- a/src/lib/Makefile
++++ b/src/lib/Makefile
+@@ -189,6 +189,10 @@ endif
+ ifdef SOEXT
+ 	cp install/libplumed.$(SOEXT) "$(DESTDIR)$(libdir)/lib$(program_name).$(SOEXT)"
+ 	cp install/libplumedKernel.$(SOEXT) "$(DESTDIR)$(libdir)/lib$(program_name)Kernel.$(SOEXT)"
++ifeq ($(SOEXT),dylib)
++	install_name_tool -id "$(libdir)/lib$(program_name).$(SOEXT)" "$(DESTDIR)$(libdir)/lib$(program_name).$(SOEXT)"
++	install_name_tool -id "$(libdir)/lib$(program_name)Kernel.$(SOEXT)" "$(DESTDIR)$(libdir)/lib$(program_name)Kernel.$(SOEXT)"
++endif
+ endif
+ # modulefile
+ 	cp install/modulefile "$(DESTDIR)$(libdir)/$(program_name)/modulefile"
+-- 
+2.13.0
+
