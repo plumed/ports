@@ -1,0 +1,39 @@
+From 38d678b43f14c7a215e31902fd15bcefdfd865b1 Mon Sep 17 00:00:00 2001
+From: Giovanni Bussi <giovanni.bussi@gmail.com>
+Date: Sun, 21 May 2017 10:15:58 +0200
+Subject: [PATCH] Added headerpax_max_install on OSX
+
+---
+ configure    | 2 +-
+ configure.ac | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure b/configure
+index 117ee9b09..f07d029d0 100755
+--- a/configure
++++ b/configure
+@@ -6622,7 +6622,7 @@ $as_echo "$as_me: Dynamic library extension is 'dylib'" >&6;}
+     { $as_echo "$as_me:${as_lineno-$LINENO}: LDSO needs special flags" >&5
+ $as_echo "$as_me: LDSO needs special flags" >&6;}
+     SOEXT=dylib
+-    LDSO="$LDSO -undefined suppress -flat_namespace -dynamiclib"
++    LDSO="$LDSO -undefined suppress -flat_namespace -dynamiclib -Wl,-headerpad_max_install_names"
+   ;;
+   (Linux)
+     { $as_echo "$as_me:${as_lineno-$LINENO}: *** Special settings for dynamic libraries on Linux ***" >&5
+diff --git a/configure.ac b/configure.ac
+index 85c556a8a..b2f55c92c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -575,7 +575,7 @@ if test "$shared" == true ; then
+     AC_MSG_NOTICE([Dynamic library extension is 'dylib'])
+     AC_MSG_NOTICE([LDSO needs special flags])
+     SOEXT=dylib
+-    LDSO="$LDSO -undefined suppress -flat_namespace -dynamiclib"
++    LDSO="$LDSO -undefined suppress -flat_namespace -dynamiclib -Wl,-headerpad_max_install_names"
+   ;;
+   (Linux)
+     AC_MSG_NOTICE([*** Special settings for dynamic libraries on Linux ***])
+-- 
+2.13.0
+
