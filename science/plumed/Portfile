@@ -7,7 +7,7 @@ PortGroup           mpi 1.0
 PortGroup           linear_algebra 1.0
 PortGroup           debug 1.0
 
-version             2.3.1
+version             2.3.2
 categories          science
 
 # Most of the PLUMED code is L-GPL3. However, PLUMED containts
@@ -32,28 +32,29 @@ checksums \
           sha256 0f0ec4998bd5fe9a897fdbecd26efb14859179bc7e9b43cb2c457c33cc64d5cf \
           rmd160 569af66d66999a17e04c2912251a2135c7ee4f93
 
-# This is required so that patch made with "git format-patch" works correctly
-patch.pre_args -p1
-# In case patches from github should be included to fix behavior on macports one should
-# - put patch files (as obtained with git format-patch) in files/ directory
-# - list their name here:
-patchfiles 0001-Added-enable-libsearch-to-configure.patch \
-           0002-Added-autoconf-flag-disable-static-patch.patch \
-           0003-Added-install_name_tool-on-mac.patch \
-           0004-Added-headerpax_max_install-on-OSX.patch
+### This is required so that patch made with "git format-patch" work correctly
+# patch.pre_args -p1
+### In case patches from github should be included to fix behavior on macports one should
+### - put patch files (as obtained with git format-patch) in files/ directory
+### - list their name here:
+# patchfiles file1 \
+#            file2
+### etc
 
 # Disable additional features.
-# They are then re-enabled when selecting proper variants
-# this is important for features that require an additional package to be
-# sure that even if the user has that package already installed plumed is
-# not going to use it.
-# Also avoid searching for doxygen.
+# --disable-doc:          Do not create documentation, and avoid searching for Doxygen.
+# --disable-libsearch:    Avoid searching libraries using their default names.
+#                         This forces the libraries names to be explicitly passed (e.g. "-lz").
+#                         It has the advantage that during compilation from source it does not
+#                         link packages that are not explicitely required.
+# --disable-static-patch: Avoid a number of tests that are only required when linking plumed
+#                         statically to an MD code.
+# --disable-mpi:          Do not search for MPI compiler (replaced when enabling mpi, see below)
 configure.args-append \
                --disable-doc \
                --disable-libsearch \
                --disable-static-patch \
                --disable-mpi 
-
 
 # Hardcode path for libplumedKernel.dylib.
 # This allows to patch MD codes using the --runtime option but using as
@@ -65,11 +66,14 @@ configure.cppflags-append "-D__PLUMED_DEFAULT_KERNEL=${prefix}/lib/libplumedKern
 compilers.choose    cc cxx
 mpi.setup
 
+# To enable mpi, replace a configure flag
 if {[mpi_variant_isset]} {
   configure.args-replace --disable-mpi --enable-mpi
 }
 
-# libraries
+# Libraries.
+# Library names are specified here to make sure that
+# only requested packages are linked.
 configure.ldflags-append -lmatheval -lxdrfile -lz -lgsl
 depends_lib-append port:libmatheval port:xdrfile port:zlib port:gsl
 
@@ -78,6 +82,7 @@ variant allmodules description {Enable all optional modules} {
   configure.args-append --enable-modules=all
 }
 
+# Link lapack/blas libraries
 pre-configure {
   # commands should be included in a pre-configure block to access tcl variables
   configure.ldflags-append ${linalglib}
