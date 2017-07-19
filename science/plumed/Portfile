@@ -1,13 +1,14 @@
 # -*- coding: utf-8; mode: tcl; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- vim:fenc=utf-8:ft=tcl:et:sw=4:ts=4:sts=4
 
 PortSystem          1.0
+PortGroup           github 1.0
+github.setup        plumed plumed2 2.3.2 v
 
 name                plumed
 PortGroup           mpi 1.0
 PortGroup           linear_algebra 1.0
 PortGroup           debug 1.0
 
-version             2.3.2
 categories          science
 
 # Most of the PLUMED code is L-GPL3. However, PLUMED containts
@@ -24,13 +25,8 @@ platforms           darwin
 
 homepage            http://www.plumed.org/
 
-master_sites        https://github.com/plumed/plumed2/releases/download/v${version}/
-distfiles           plumed-src-${version}.tgz
-
-checksums  \
-  plumed-src-${version}.tgz \
-          sha256 230be68bfa73797dcf209c1b6f8920cc9b8169dd97bffc5612c8b82735fdfead \
-          rmd160 4cd2a360e374447311b3d422e795a1c3db5fe961
+checksums           rmd160  a9925428b2a5fa1d43a4ef677b216bcec0e2ac27 \
+                    sha256  6df6a31ec47da3ec81e3554224b0c66b49ca62dd9cac659d085e0b89c870d9f5
 
 ### This is required so that patch made with "git format-patch" work correctly
 # patch.pre_args -p1
