@@ -81,8 +81,13 @@ post-test {
 #For more information and tips for troubleshooting, please check the GROMACS
 #website at http://www.gromacs.org/Documentation/Errors
 
-## ADDITION FOR PLUMED VARIANT ONLY
-variant plumed description "Patched with plumed" {
+## ADDITION FOR PLUMED SUBPORT
+subport gromacs-plumed {
+
+    long_description    ${description}: \
+      THIS PORT INSTALLS A VERSION OF GROMACS PATCHED WITH PLUMED
+    conflicts gromacs
+
     depends_build-append   port:plumed
     depends_lib-append     port:plumed
     mpi.enforce_variant plumed
