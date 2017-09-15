@@ -29,7 +29,7 @@ install:
 
 script:
 # travis wait is needed since building mpi could require time
- - travis_wait 30 sudo port install plumed $PLUMED_VAR
+ - travis_wait 30 sudo port install plumed-devel $PLUMED_VAR
  - plumed info --configuration
  - travis_wait 30 sudo port install gromacs-plumed $GROMACS_VAR
  - ./macports-ci ccache --save
