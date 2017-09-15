@@ -84,3 +84,23 @@ pre-configure {
   configure.ldflags-append ${linalglib}
 }
 
+subport plumed-devel {
+    github.setup        plumed plumed2 0911755b35b63b7d485f18d8952c3343ff98487f
+    version             2.4-20170915
+
+    description         ${description} (development version)
+    long_description    ${long_description} (development version)
+    conflicts plumed
+    checksums           rmd160  f6c4fc6ed5c05ed29d20c2d41436728a74f3f18a \
+                        sha256  758fa14736ba61b730bfd45a5a6a0701397e4dced96e250471d6558355a7672e
+    variant allmodules {
+      configure.args-append --enable-modules=all --enable-boost-serialization
+      configure.ldflags-append -lboost_serialization-mt
+      depends_lib-append port:boost
+    }
+
+}
+
+
+
+
