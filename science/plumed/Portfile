@@ -6,7 +6,7 @@ PortGroup           mpi 1.0
 PortGroup           linear_algebra 1.0
 PortGroup           debug 1.0
 
-github.setup        plumed plumed2 2.3.2 v
+github.setup        plumed plumed2 2.3.3 v
 name                plumed
 
 categories          science
@@ -25,8 +25,8 @@ platforms           darwin
 
 homepage            http://www.plumed.org/
 
-checksums           rmd160  a9925428b2a5fa1d43a4ef677b216bcec0e2ac27 \
-                    sha256  6df6a31ec47da3ec81e3554224b0c66b49ca62dd9cac659d085e0b89c870d9f5
+checksums           rmd160  bd344729ce616dcf13a8297e6e805285fe86358d \
+                    sha256  79fbd5f5a4656305d4ed83a5b4d4857f1c4ebda935bc847f5eb26c1497c9fca8
 
 
 # Disable additional features.
