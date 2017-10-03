@@ -25,8 +25,8 @@ platforms           darwin
 
 homepage            http://www.plumed.org/
 
-checksums           rmd160  bd344729ce616dcf13a8297e6e805285fe86358d \
-                    sha256  79fbd5f5a4656305d4ed83a5b4d4857f1c4ebda935bc847f5eb26c1497c9fca8
+checksums           rmd160  e8504f3b30fdc09c5ccfaace98491611f796c04a \
+                    sha256  ffcdc7bb88a41063b625e1f2c735e7f8eaf0c35f02246ea135f62e5ebbf1e7d0
 
 
 # Disable additional features.
