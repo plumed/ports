@@ -81,11 +81,24 @@ post-test {
 #For more information and tips for troubleshooting, please check the GROMACS
 #website at http://www.gromacs.org/Documentation/Errors
 
-## ADDITION FOR PLUMED VARIANT ONLY
-variant plumed description "Patched with plumed" {
-    depends_build-append   port:plumed
-    depends_lib-append     port:plumed
-    mpi.enforce_variant plumed
+## ADDITION FOR PLUMED SUBPORT
+subport gromacs-plumed {
+
+    description    ${description}: \
+      (THIS PORT INSTALLS A VERSION OF GROMACS PATCHED WITH PLUMED)
+    long_description    ${long_description}: \
+      (THIS PORT INSTALLS A VERSION OF GROMACS PATCHED WITH PLUMED)
+    conflicts gromacs
+
+# in case gromacs is compiled with MPI, also enforce that plumed is complied with the same MPI variant:
+    if {[mpi_variant_isset]} {
+      require_active_variants path:${prefix}/lib/libplumedKernel.dylib:plumed [mpi_variant_name]
+    }
+# make sure that thread MPI is disabled, since it does not work with plumed
+    configure.args-append -DGMX_THREAD_MPI=OFF
+
+    depends_build-append   path:${prefix}/bin/plumed:plumed
+    depends_lib-append     path:${prefix}/lib/libplumedKernel.dylib:plumed
     pre-configure {
 # I need to execute with full path since PATH variable is not properly set here
 # Also notice that I am patching with runtime. Notice that 
@@ -97,7 +110,7 @@ variant plumed description "Patched with plumed" {
       exec ${prefix}/bin/plumed patch --mdroot=${worksrcpath} -e gromacs-5.1.4 --runtime -p
     }
 }
-## END ADDITION FOR PLUMED VARIANT ONLY
+## END ADDITION FOR PLUMED SUBPORT ONLY
 
 linalg.setup  noveclibfort
 pre-configure {
