@@ -104,3 +104,11 @@ subport plumed-devel {
       depends_lib-append port:boost
     }
 }
+
+# testsuite
+test.run yes
+test.cmd make
+test.target ""
+test.args -j 1 -C regtest all checkfail
+test.env PATH="${worksrcpath}/src/lib:$::env(PATH)"
+
