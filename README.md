@@ -4,6 +4,8 @@ Plumed-related portfiles
 This repository contains port files that are not (yet) included in the official port
 release.
 
+***WARNING: these repository is used for experimental features. Please refer to the PLUMED manual and to the official MacPorts release in order to obtain documentation on the supported PLUMED version.*** 
+
 You can setup macports to use them as follows
 
     > git clone git@github.com:plumed/ports.git
@@ -52,9 +54,9 @@ There is also a tentative replacement for the gromacs port.
 The only difference between this port and the one provided by macports
 is that this one also implements a plumed variant.
 For instance, you can use the following command to install
-gromacs patched with plumed with gcc compiler and openmpi:
+gromacs patched with plumed with recent clang compiler and openmpi:
 
-    > sudo port install gromacs +openmpi +gcc6 +plumed
+    > sudo port install gromacs +openmpi +clang50 +plumed
 
 Notice that gromacs is patched with plumed in runtime mode
 but that the path of libplumedKernel.dylib in the macports tree
@@ -67,6 +69,6 @@ is hardcoded. As a consequence:
   of the plumed library, the other instance is used.
 
 Also notice that gromacs should be compiled using the same compiler
-variant as plumed (in this example `+openmpi +gcc6`). In case this is not
+variant as plumed (in this example `+openmpi +clang50`). In case this is not
 true, compilation will fail.
 
