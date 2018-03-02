@@ -1,5 +1,4 @@
-language: objective-c
-osx_image: xcode7.3
+os: osx
 cache:
   directories:
   - $HOME/.macports-ci-ccache
@@ -8,14 +7,14 @@ matrix:
   include:
 # I test all the combinations of:
 # no mpi / openmpi / mpich
-# native compilers / latest stable gcc
-  - env: PLUMED_VAR=""               GROMACS_VAR=""
-  - env: PLUMED_VAR="+allmodules"    GROMACS_VAR=""
-  - env: PLUMED_VAR="+gcc6"          GROMACS_VAR="+gcc6"
-  - env: PLUMED_VAR="+openmpi"       GROMACS_VAR="+openmpi"
-  - env: PLUMED_VAR="+gcc6 +openmpi" GROMACS_VAR="+gcc6 +openmpi"
-  - env: PLUMED_VAR="+mpich"         GROMACS_VAR="+mpich"
-  - env: PLUMED_VAR="+gcc6 +mpich"   GROMACS_VAR="+gcc6 +mpich"
+# native compilers / latest stable clang
+  - env: PLUMED_VAR=""                  GROMACS_VAR=""
+  - env: PLUMED_VAR="+allmodules"       GROMACS_VAR=""
+  - env: PLUMED_VAR="+clang50"          GROMACS_VAR="+clang50"
+  - env: PLUMED_VAR="+openmpi"          GROMACS_VAR="+openmpi"
+  - env: PLUMED_VAR="+clang50 +openmpi" GROMACS_VAR="+clang50 +openmpi"
+  - env: PLUMED_VAR="+mpich"            GROMACS_VAR="+mpich"
+  - env: PLUMED_VAR="+clang50 +mpich"   GROMACS_VAR="+clang50 +mpich"
 
 install:
 # set columns in terminal, required for curl to work correctly:
@@ -33,3 +32,9 @@ script:
  - plumed info --configuration
  - travis_wait 30 sudo port install gromacs-plumed $GROMACS_VAR
  - ./macports-ci ccache --save
+# double check wich libraries are used
+ - otool -L /opt/local/bin/plumed
+ - otool -L /opt/local/lib/libplumed.dylib
+ - otool -L /opt/local/lib/libplumedKernel.dylib
+ - otool -L /opt/local/bin/gmx*
+ - otool -L /opt/local/lib/libgromacs*.dylib
